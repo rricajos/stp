@@ -1,75 +1,93 @@
 // ============================================
-// SCRIPT PARA MODIFICAR SIDEBAR POST-RENDERING
+// SCRIPT PARA OCULTAR ELEMENTOS DEL SIDEBAR
 // ============================================
 
 (function() {
   'use strict';
   
-  // Función para aplicar los cambios
-  function modificarSidebar() {
-    // 1. Buscar el header de "Carpetes" (o "Carpetas")
-    const carpetesHeader = Array.from(
+  // Función para ocultar elementos no deseados
+  function limpiarSidebar() {
+    let cambiosRealizados = false;
+    
+    // 1. Ocultar items originales de "Converses"
+    const itemsAOcultar = [
+      'li[name="All"]',
+      'li[name="Mentions"]', 
+      'li[name="Unattended"]'
+    ];
+    
+    itemsAOcultar.forEach(selector => {
+      const elemento = document.querySelector(selector);
+      if (elemento && elemento.style.display !== 'none') {
+        elemento.style.display = 'none';
+        cambiosRealizados = true;
+      }
+    });
+    
+    // 2. Ocultar header de "Carpetes"
+    const carpetesHeaders = Array.from(
       document.querySelectorAll('div.flex.items-center.select-none.pointer-events-none.my-1')
-    ).find(div => {
+    ).filter(div => {
       const text = div.textContent.trim();
       return text === 'Carpetes' || text === 'Carpetas';
     });
     
-    if (carpetesHeader) {
-      // 2. Buscar el icono de folder dentro del header
-      const folderIcon = carpetesHeader.querySelector('span.i-lucide-folder');
-      
-      if (folderIcon) {
-        // 3. Crear el nuevo icono de message-circle
-        const messageIcon = document.createElement('span');
-        messageIcon.className = 'i-lucide-message-circle size-4 injected-icon';
-        
-        // 4. Reemplazar el icono de folder por el de message-circle
-        folderIcon.parentNode.replaceChild(messageIcon, folderIcon);
-        
-        console.log('✓ Icono de Carpetes reemplazado por message-circle');
+    carpetesHeaders.forEach(header => {
+      if (header.style.display !== 'none') {
+        header.style.display = 'none';
+        cambiosRealizados = true;
       }
-    } else {
-      console.warn('⚠ No se encontró el header de Carpetes/Carpetas');
+    });
+    
+    if (cambiosRealizados) {
+      console.log('✓ Sidebar limpiado correctamente');
     }
   }
   
-  // Ejecutar inmediatamente si el DOM ya está listo
+  // Ejecutar inmediatamente
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', modificarSidebar);
+    document.addEventListener('DOMContentLoaded', limpiarSidebar);
   } else {
-    modificarSidebar();
+    limpiarSidebar();
   }
   
-  // Observador de mutaciones para detectar cambios dinámicos en el sidebar
-  // (útil si la aplicación usa Vue/React y re-renderiza el sidebar)
+  // Observador de mutaciones para aplicaciones SPA (Vue/React)
   const observer = new MutationObserver(function(mutations) {
+    let necesitaLimpieza = false;
+    
     mutations.forEach(function(mutation) {
       if (mutation.addedNodes.length > 0) {
-        // Verificar si se agregó el header de Carpetes
-        const needsUpdate = Array.from(mutation.addedNodes).some(node => {
-          if (node.nodeType === 1) { // Element node
-            return node.querySelector && 
-                   node.querySelector('span.i-lucide-folder');
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1) {
+            // Verificar si se agregaron elementos que necesitan ocultarse
+            if (node.matches && (
+                node.matches('li[name="All"]') ||
+                node.matches('li[name="Mentions"]') ||
+                node.matches('li[name="Unattended"]') ||
+                (node.querySelector && node.querySelector('span.i-lucide-folder'))
+            )) {
+              necesitaLimpieza = true;
+            }
           }
-          return false;
         });
-        
-        if (needsUpdate) {
-          setTimeout(modificarSidebar, 100);
-        }
       }
     });
+    
+    if (necesitaLimpieza) {
+      setTimeout(limpiarSidebar, 50);
+    }
   });
   
-  // Observar cambios en el sidebar
-  const sidebarContainer = document.querySelector('li.grid.gap-1.text-sm.cursor-pointer.select-none');
-  if (sidebarContainer) {
-    observer.observe(sidebarContainer, {
-      childList: true,
-      subtree: true
-    });
-  }
+  // Observar el contenedor del sidebar
+  setTimeout(() => {
+    const sidebarContainer = document.querySelector('ul.sidebar-group-children');
+    if (sidebarContainer) {
+      observer.observe(sidebarContainer, {
+        childList: true,
+        subtree: true
+      });
+      console.log('✓ Observador del sidebar activado');
+    }
+  }, 100);
   
-  console.log('✓ Script de modificación del sidebar cargado');
 })();

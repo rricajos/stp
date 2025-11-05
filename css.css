@@ -1,25 +1,36 @@
 /* ============================================
-   OCULTAR BOTÓN "CONVERSES"
+   OCULTAR ITEMS ORIGINALES DE "CONVERSES"
    ============================================ */
 
-/* Ocultar el header/botón principal "Converses" */
-li.grid.gap-1.text-sm.cursor-pointer.select-none > div.flex.items-center[role="button"][title="Converses"] {
+/* Ocultar "Totes les converses" */
+ul.sidebar-group-children > li[name="All"] {
+  display: none !important;
+}
+
+/* Ocultar "Mencions" */
+ul.sidebar-group-children > li[name="Mentions"] {
+  display: none !important;
+}
+
+/* Ocultar "Sense assistència" */
+ul.sidebar-group-children > li[name="Unattended"] {
   display: none !important;
 }
 
 /* ============================================
-   MODIFICAR ICONO DE "CARPETES"
+   OCULTAR HEADER "CARPETES"
    ============================================ */
 
-/* Ocultar el icono original de folder en "Carpetes" */
-div.flex.items-center.select-none.pointer-events-none.my-1:has(span.i-lucide-folder) span.i-lucide-folder {
+/* Ocultar el header de "Carpetes" con su icono */
+div.flex.items-center.select-none.pointer-events-none.my-1:has(span.i-lucide-folder) {
   display: none !important;
 }
 
-/* El icono de message-circle será agregado via JavaScript */
-/* Estos estilos aseguran que se vea correctamente */
-div.flex.items-center.select-none.pointer-events-none.my-1 span.i-lucide-message-circle.injected-icon {
-  width: 1rem;
-  height: 1rem;
-  display: inline-block;
+/* Alternativa si :has() no funciona en tu navegador */
+ul.sidebar-group-children > div.flex.items-center.my-1 span.i-lucide-folder {
+  display: none !important;
+}
+
+ul.sidebar-group-children > div.flex.items-center.my-1:has(span.i-lucide-folder) {
+  display: none !important;
 }
