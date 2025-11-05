@@ -1,16 +1,6 @@
 /* ============================================
-   OCULTAR ITEMS ORIGINALES DE "CONVERSES"
+   OCULTAR ITEMS NO DESEADOS DE "CONVERSES"
    ============================================ */
-
-/* Ocultar "Totes les converses" */
-ul.sidebar-group-children > li[name="All"] {
-  display: none !important;
-}
-
-/* Ocultar "Mencions" */
-ul.sidebar-group-children > li[name="Mentions"] {
-  display: none !important;
-}
 
 /* Ocultar "Sense assistència" */
 ul.sidebar-group-children > li[name="Unattended"] {

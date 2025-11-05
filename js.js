@@ -9,10 +9,8 @@
   function limpiarSidebar() {
     let cambiosRealizados = false;
     
-    // 1. Ocultar items originales de "Converses"
+    // 1. Ocultar solo "Sense assistència"
     const itemsAOcultar = [
-      'li[name="All"]',
-      'li[name="Mentions"]', 
       'li[name="Unattended"]'
     ];
     
@@ -61,8 +59,6 @@
           if (node.nodeType === 1) {
             // Verificar si se agregaron elementos que necesitan ocultarse
             if (node.matches && (
-                node.matches('li[name="All"]') ||
-                node.matches('li[name="Mentions"]') ||
                 node.matches('li[name="Unattended"]') ||
                 (node.querySelector && node.querySelector('span.i-lucide-folder'))
             )) {
