@@ -24,3 +24,20 @@ ul.sidebar-group-children > div.flex.items-center.my-1 span.i-lucide-folder {
 ul.sidebar-group-children > div.flex.items-center.my-1:has(span.i-lucide-folder) {
   display: none !important;
 }
+
+ul.sidebar-group-children > div.flex.items-center.my-1:has(span.i-lucide-folder) {
+  display: none !important;
+}
+
+
+/* ============================================
+   OCULTAR CANALES
+   ============================================ */
+
+ul.sidebar-group-children > div.flex.items-center.my-1:has(span.i-lucide-mailbox) {
+  display: none !important;
+}
+
+li.child-item[name="STP-1"] {
+  display: none !important;
+}
