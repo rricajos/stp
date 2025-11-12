@@ -41,3 +41,18 @@ ul.sidebar-group-children > div.flex.items-center.my-1:has(span.i-lucide-mailbox
 li.child-item[name="STP-1"] {
   display: none !important;
 }
+
+
+
+
+
+
+
+/* ============================================
+   OCULTAR SCROLL 
+   ============================================ */
+
+   
+div.absolute.bg-gradient-to-t.from-n-solid-2.-bottom-1 {
+  display: none !important;
+}

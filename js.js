@@ -87,3 +87,14 @@
   }, 100);
   
 })();
+
+
+// Quita el scroll bar
+(function() {
+  try {
+    const div = document.querySelector('ul.m-0.list-none.reset-base.relative.group > div.overflow-y-scroll.no-scrollbar');
+    if (div) {
+      div.className = div.className = "";
+    }
+  } catch(e) {}
+})();
