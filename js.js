@@ -34,7 +34,7 @@
       }
     });
     
-    // 3. Eliminar clases del contenedor scroll (MOVIDO AQUÍ) ✅
+    // 3. Eliminar clases del contenedor scroll
     try {
       const div = document.querySelector('ul.m-0.list-none.reset-base.relative.group > div.overflow-y-scroll.no-scrollbar');
       if (div && div.className !== "") {
@@ -52,47 +52,43 @@
   }
   
   // Ejecutar inmediatamente
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', limpiarSidebar);
-  } else {
-    limpiarSidebar();
-  }
+  limpiarSidebar();
   
-  // Observador de mutaciones para aplicaciones SPA (Vue/React)
+  // Observador de mutaciones para Vue
   const observer = new MutationObserver(function (mutations) {
-    let necesitaLimpieza = false;
-    
-    mutations.forEach(function (mutation) {
-      if (mutation.addedNodes.length > 0) {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType === 1) {
-            // Verificar si se agregaron elementos que necesitan ocultarse
-            if (node.matches && (
-              node.matches('li[name="Unattended"]') ||
-              node.matches('div.overflow-y-scroll.no-scrollbar') || // ✅ AÑADIDO
-              (node.querySelector && node.querySelector('span.i-lucide-folder'))
-            )) {
-              necesitaLimpieza = true;
-            }
-          }
-        });
-      }
-    });
-    
-    if (necesitaLimpieza) {
-      setTimeout(limpiarSidebar, 50);
-    }
+    limpiarSidebar(); // Ejecutar en cada cambio del DOM
   });
   
-  // Observar el contenedor del sidebar
-  setTimeout(() => {
-    const sidebarContainer = document.querySelector('ul.sidebar-group-children');
-    if (sidebarContainer) {
-      observer.observe(sidebarContainer, {
+  // Función para iniciar observador
+  function iniciarObservador() {
+    // Observar #app o el contenedor raíz de Vue
+    const appContainer = document.querySelector('#app') || 
+                        document.querySelector('#__nuxt') || 
+                        document.body;
+    
+    if (appContainer) {
+      observer.observe(appContainer, {
         childList: true,
-        subtree: true
+        subtree: true // ✅ IMPORTANTE: observar todo el árbol
       });
-      console.log('✓ Observador del sidebar activado');
+      console.log('✓ Observador Vue activado en:', appContainer);
+      limpiarSidebar(); // Ejecutar una vez más después de activar
+    } else {
+      console.warn('⚠ Contenedor de app no encontrado');
     }
-  }, 100);
+  }
+  
+  // Iniciar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciarObservador);
+  } else {
+    iniciarObservador();
+  }
+  
+  // También ejecutar después de un delay para asegurar
+  setTimeout(limpiarSidebar, 1000);
+  setTimeout(limpiarSidebar, 2000);
+  setTimeout(limpiarSidebar, 3000);
+  setTimeout(limpiarSidebar, 4000);
+  
 })();
