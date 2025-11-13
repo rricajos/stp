@@ -40,9 +40,14 @@
     try {
       const div = document.querySelector('ul.m-0.list-none.reset-base.relative.group > div.overflow-y-scroll.no-scrollbar');
       if (div) {
-        div.className = div.className = "";
+        div.className = ""; // ✓ Solo una asignación
+        console.log('✓ Clases eliminadas del div scroll');
+      } else {
+        console.warn('⚠ Elemento div.overflow-y-scroll no encontrado');
       }
-    } catch (e) { }
+    } catch (e) {
+      console.error('❌ Error al eliminar clases:', e); // Ver qué falla
+    }
 
     if (cambiosRealizados) {
       console.log('✓ Sidebar limpiado correctamente');
