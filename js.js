@@ -1,19 +1,17 @@
 // ============================================
 // SCRIPT PARA OCULTAR ELEMENTOS DEL SIDEBAR
 // ============================================
-
 (function () {
   'use strict';
-
+  
   // Función para ocultar elementos no deseados
   function limpiarSidebar() {
     let cambiosRealizados = false;
-
+    
     // 1. Ocultar solo "Sense assistència"
     const itemsAOcultar = [
       'li[name="Unattended"]'
     ];
-
     itemsAOcultar.forEach(selector => {
       const elemento = document.querySelector(selector);
       if (elemento && elemento.style.display !== 'none') {
@@ -21,7 +19,7 @@
         cambiosRealizados = true;
       }
     });
-
+    
     // 2. Ocultar header de "Carpetes"
     const carpetesHeaders = Array.from(
       document.querySelectorAll('div.flex.items-center.select-none.pointer-events-none.my-1')
@@ -29,43 +27,41 @@
       const text = div.textContent.trim();
       return text === 'Carpetes' || text === 'Carpetas';
     });
-
     carpetesHeaders.forEach(header => {
       if (header.style.display !== 'none') {
         header.style.display = 'none';
         cambiosRealizados = true;
       }
     });
-
+    
+    // 3. Eliminar clases del contenedor scroll (MOVIDO AQUÍ) ✅
     try {
       const div = document.querySelector('ul.m-0.list-none.reset-base.relative.group > div.overflow-y-scroll.no-scrollbar');
-      if (div) {
-        div.className = ""; // ✓ Solo una asignación
+      if (div && div.className !== "") {
+        div.className = "";
+        cambiosRealizados = true;
         console.log('✓ Clases eliminadas del div scroll');
-      } else {
-        console.warn('⚠ Elemento div.overflow-y-scroll no encontrado');
       }
     } catch (e) {
-      console.error('❌ Error al eliminar clases:', e); // Ver qué falla
+      console.error('❌ Error al eliminar clases:', e);
     }
-
+    
     if (cambiosRealizados) {
       console.log('✓ Sidebar limpiado correctamente');
     }
   }
-
+  
   // Ejecutar inmediatamente
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', limpiarSidebar);
   } else {
     limpiarSidebar();
-
   }
-
+  
   // Observador de mutaciones para aplicaciones SPA (Vue/React)
   const observer = new MutationObserver(function (mutations) {
     let necesitaLimpieza = false;
-
+    
     mutations.forEach(function (mutation) {
       if (mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach(node => {
@@ -73,6 +69,7 @@
             // Verificar si se agregaron elementos que necesitan ocultarse
             if (node.matches && (
               node.matches('li[name="Unattended"]') ||
+              node.matches('div.overflow-y-scroll.no-scrollbar') || // ✅ AÑADIDO
               (node.querySelector && node.querySelector('span.i-lucide-folder'))
             )) {
               necesitaLimpieza = true;
@@ -81,12 +78,12 @@
         });
       }
     });
-
+    
     if (necesitaLimpieza) {
       setTimeout(limpiarSidebar, 50);
     }
   });
-
+  
   // Observar el contenedor del sidebar
   setTimeout(() => {
     const sidebarContainer = document.querySelector('ul.sidebar-group-children');
@@ -98,5 +95,4 @@
       console.log('✓ Observador del sidebar activado');
     }
   }, 100);
-
 })();
